@@ -6,11 +6,13 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 
 app = Flask(__name__)
-db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 app.config['SECRET_KEY'] = 'incorrectyoualreadyknow'
-class User(db.model, UserMixin):
+
+db = SQLAlchemy(app)
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     username = db.Column(db.String(80), nullable=False)
@@ -34,20 +36,21 @@ class LoginForm(FlaskForm):
 min=4, max=20)], render_kw={"placeholder":"Username"})
     password = PasswordField(validators=[InputRequired(), Length(
 min=4, max=20)], render_kw={"placeholder":"Password"})
-
-submit = SubmitField("Login")
+submit = SubmitField("login")
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    return render_template('login.html', form=form)
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return render_template('signup.html')
+    form = RegisterForm()
+    return render_template('signup.html', form=form)
 
 
 if __name__ == '__main__':
