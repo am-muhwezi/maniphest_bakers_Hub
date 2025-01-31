@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual Environment
+venv/
+ENV/
+
+# Flask specific
+instance/
+*.pid
+
+# Environment Variables
+.env
+
+# Database
+*.sqlite3
+db.sqlite3
+migrations/
+
+# Logs and Debug
+*.log
+debug.log
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+
+# Deployment
+*.bak
+*.orig
+.DS_Store
+
+# Python Packaging
+*.egg-info/
+dist/
+build/
+
+# Docker
+*.dockerignore
+
+# Heroku
+*.procfile
+.venv/
+
