@@ -18,7 +18,7 @@ class User(db.Model):
     pastries=db.relationship('Pastries',backref='owner',lazy=True)
 
     def __repr__(self):
-        return f"<User {self.fullname}>"
+        return f"<User {self.id} {self.fullname}>"
     
     def save(self):
         db.session.add(self)

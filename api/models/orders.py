@@ -14,12 +14,17 @@ class Orders(db.Model):
 
     id=db.Column(db.Integer, primary_key=True)
     quantity=db.Column(db.Integer,nullable=False)
-    total=db.Column(db.Float,nullable=False)
     created_at=db.Column(db.DateTime(),default=datetime.utcnow)
     updated_at=db.Column(db.DateTime(),default=datetime.utcnow)
     order_status=db.Column(db.Enum(OrderStatus),default=OrderStatus.PENDING)
-    user_id=db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    pastry_id=db.Column(db.Integer,db.ForeignKey('pastries.id'), nullable=False)
+    user_id=db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    pastry_id=db.Column(db.Integer,db.ForeignKey('pastries.id'), nullable=True)
 
-    def __repr__(self):
+
+    def __str__(self):
         return f"<Order {self.id}>"
+    
+
+    def saves_to_db(self):
+        db.session.add(self)
+        db.session.commit()
