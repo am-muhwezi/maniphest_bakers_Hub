@@ -15,7 +15,7 @@ class User(db.Model):
     is_active=db.Column(db.Boolean,default=True)
 
     orders=db.relationship('Orders',backref='user',lazy=True)
-    pastries=db.relationship('Pastries',backref='user',lazy=True)
+    pastries=db.relationship('Pastries',backref='owner',lazy=True)
 
     def __repr__(self):
         return f"<User {self.fullname}>"
