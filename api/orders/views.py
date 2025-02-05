@@ -3,7 +3,7 @@ from flask_jwt_extended import get_jwt_identity,jwt_required
 from ..models.orders import Orders
 from ..models.users import User
 from http import HTTPStatus
-
+from ..auth.auth_decorator import admin_required,baker_required,client_required
 
 orders_namespace = Namespace('orders', description='Orders operations')
 
@@ -28,11 +28,12 @@ class OrderGetCreate(Resource):
         Get all orders and create an order
     """
 
-    #@jwt_required()
+    @jwt_required()
+    @admin_required()
     @orders_namespace.marshal_with(order_model)
     def get(self):
         """
-            Get all orders
+            Get all orders for admin
         """
         orders=Orders.query.all()
         return orders,HTTPStatus.OK
