@@ -11,7 +11,7 @@ from .utils import db
 from .models.orders import Orders
 from .models.pastries import Pastries
 from .models.users import User
-
+from werkzeug.exceptions import NotFound, MethodNotAllowed
 
 
 def create_app(config=config_dict['dev']):
@@ -23,6 +23,8 @@ def create_app(config=config_dict['dev']):
     
 
     migrate=Migrate(app, db)
+
+
     
     api=Api(app, title='Maniphest Bakers API', version='1.0', description='Maniphest Bakers Hub API')
     api.add_namespace(auth_namespace)
@@ -32,6 +34,15 @@ def create_app(config=config_dict['dev']):
 
     db.init_app(app)
     jwt=JWTManager(app)
+
+
+    @api.errorhandler(NotFound)
+    def not_found_error(e):
+        return {'message': 'Rizz not found'},404
+    
+    @app.errorhandler(MethodNotAllowed)
+    def method_not_allowed_error(e):
+        return {'message': 'Man, Method not allowed'},405
 
     @app.shell_context_processor
     def make_shell_context():
