@@ -1,9 +1,8 @@
 from flask_restx import Resource,Namespace
-
+from ..models.users import User
 
 
 users_namespace=Namespace('users',description='Users operations')
-
 
 
 @users_namespace.route('/users')

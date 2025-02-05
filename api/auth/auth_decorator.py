@@ -6,6 +6,8 @@ from http import HTTPStatus
 
 
 def admin_required():
+
+
     def wrapper(func):
         @wraps(func)
 
@@ -14,7 +16,7 @@ def admin_required():
             user=User.query.filter_by(email=current_user_email).first()
 
 
-            if not user.is_staff:
+            if user.role != 'admin':
                 return {'message':'Admin access required'},HTTPStatus.FORBIDDEN
             
             return func(*args, **kwargs)
@@ -28,10 +30,10 @@ def baker_required():
 
         def decorator(*args, **kwargs):
             current_user_email=get_jwt_identity()
-            user=User.query.filter_by(email=current_user_email).first()
+            user=User.query.filter_by(email=current_user_email['email']).first()
 
 
-            if not user.is_staff:
+            if user.role != 'baker':
                 return {'message':'Baker access required'},403
             
             return func(*args, **kwargs)
@@ -48,7 +50,7 @@ def client_required():
             user=User.query.filter_by(email=current_user_email).first()
 
 
-            if user.is_staff:
+            if user.role != 'client':
                 return {'message':'Client access required'},403
             
             return func(*args, **kwargs)
