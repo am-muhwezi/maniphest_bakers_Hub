@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import(create_access_token,
 create_refresh_token, jwt_required, get_jwt_identity)
 from ..models.users import User
+from ..auth.auth_decorator import admin_required,baker_required,client_required
 
 
 
@@ -24,7 +25,7 @@ user_model = auth_namespace.model(
         'fullname':fields.String(required=True,description='User fullname'),
         'email':fields.String(required=True,description='User email'),
         'password':fields.String(required=True,description='User password'),
-        'is_staff':fields.Boolean(readOnly=True,description='User is staff'),
+        'role':fields.String(required=True,description='User role'),
         'is_active':fields.Boolean(readOnly=True,description='User is active')
 })
 
@@ -32,7 +33,7 @@ login_model = auth_namespace.model(
     'Login',{
         'email':fields.String(required=True,description='User email'),
         'password':fields.String(required=True,description='User password'),
-        'is_staff':fields.Boolean(readOnly=True,description='User is staff'),
+        'role':fields.String(required=True,description='User role')
 })
 
 @auth_namespace.route('/signup')
@@ -46,20 +47,22 @@ class Signup(Resource):
         """
         data=request.get_json()
 
+        role=data.get('role', 'client')
+
+        if role not in ['admin','baker','client']:
+            return {'message':'Invalid role'},HTTPStatus.BAD_REQUEST
+
 
         new_user=User(
             fullname=data.get('fullname'),
             email=data.get('email'),
-            password=generate_password_hash(data.get('password'))
+            password=generate_password_hash(data.get('password')),
+            role=role
         )
 
         new_user.save()
 
-
-
-        return new_user, HTTPStatus.CREATED
-
-
+        return new_user,HTTPStatus.CREATED
 
 @auth_namespace.route('/login')
 class Login(Resource):
