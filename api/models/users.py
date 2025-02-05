@@ -11,7 +11,7 @@ class User(db.Model):
     password=db.Column(db.String(80),nullable=False)
     created_at=db.Column(db.DateTime(),default=datetime.utcnow)
     updated_at=db.Column(db.DateTime(),default=datetime.utcnow)
-    is_staff=db.Column(db.Boolean,default=False)
+    role=db.Column(db.String(20),default='client')
     is_active=db.Column(db.Boolean,default=True)
 
     orders=db.relationship('Orders',backref='user',lazy=True)
