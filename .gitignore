@@ -44,3 +44,5 @@ build/
 *.procfile
 .venv/
 
+# DB files
+*.db
