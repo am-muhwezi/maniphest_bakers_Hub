@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import(create_access_token,
 create_refresh_token, jwt_required, get_jwt_identity)
 from ..models.users import User
+from werkzeug.exceptions import Conflict,BadRequest
 from ..auth.auth_decorator import admin_required,baker_required,client_required
 
 
@@ -52,17 +53,22 @@ class Signup(Resource):
         if role not in ['admin','baker','client']:
             return {'message':'Invalid role'},HTTPStatus.BAD_REQUEST
 
-
-        new_user=User(
+        try:
+            new_user=User(
             fullname=data.get('fullname'),
             email=data.get('email'),
             password=generate_password_hash(data.get('password')),
             role=role
         )
 
-        new_user.save()
+            new_user.save()
 
-        return new_user,HTTPStatus.CREATED
+            return new_user,HTTPStatus.CREATED
+
+        except Exception as e:
+            raise Conflict(f'User with {data.get('email')} exists') from e
+    
+
 
 @auth_namespace.route('/login')
 class Login(Resource):
@@ -91,3 +97,5 @@ class Login(Resource):
             }
 
             return response, HTTPStatus.OK
+
+        raise BadRequest('Invalid email or password')

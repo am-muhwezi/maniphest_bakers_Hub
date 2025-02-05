@@ -30,3 +30,7 @@ class Pastries(db.Model):
     @classmethod
     def get_pastry_by_id(cls, id):
         return cls.query.get_or_404(id)
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
