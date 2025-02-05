@@ -30,7 +30,7 @@ def baker_required():
 
         def decorator(*args, **kwargs):
             current_user_email=get_jwt_identity()
-            user=User.query.filter_by(email=current_user_email['email']).first()
+            user=User.query.filter_by(email=current_user_email).first()
 
 
             if user.role != 'baker':
