@@ -1,6 +1,8 @@
 from flask_restx import Resource, Namespace,fields
 from ..models.pastries import Pastries
 from http import HTTPStatus
+from ..utils import db
+
 
 pastry_namespace = Namespace('pastry', description='Pastry operations')
 
@@ -58,10 +60,26 @@ class PastryGetUpdate(Resource):
         """
             Update a pastry by id
         """
-        pass
+        pastry_to_update=Pastries.get_pastry_by_id(pastry_id)
 
+        data=pastry_namespace.payload
+
+        pastry_to_update.name=data['is_available']
+        pastry_to_update.price=data['price']
+        pastry_to_update.description=data['description']
+
+        db.session.commit()
+
+        return pastry_to_update,HTTPStatus.OK
+
+
+    @pastry_namespace.marshal_with(pastry_model)
     def delete(self, pastry_id):
         """
             Delete a pastry by id
         """
-        pass
+        pastry_to_delete=Pastries.get_pastry_by_id(pastry_id)
+
+        pastry_to_delete.delete_from_db()
+
+        return pastry_to_delete,HTTPStatus.NO_CONTENT
