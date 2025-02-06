@@ -11,6 +11,7 @@ from .utils import db
 from .models.orders import Orders
 from .models.pastries import Pastries
 from .models.users import User
+from flask_migrate import Migrate
 from werkzeug.exceptions import NotFound, MethodNotAllowed
 
 
