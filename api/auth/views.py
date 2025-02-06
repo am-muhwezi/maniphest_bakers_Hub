@@ -23,7 +23,8 @@ signup_model = auth_namespace.model(
 user_model = auth_namespace.model(
     'User',{
         'id':fields.Integer(readOnly=True,description='The user unique identifier'),
-        'fullname':fields.String(required=True,description='User fullname'),
+        'firstname':fields.String(required=True,description='User firstname'),
+        'lastname':fields.String(required=True,description='User lastname'),
         'email':fields.String(required=True,description='User email'),
         'password':fields.String(required=True,description='User password'),
         'role':fields.String(required=True,description='User role'),
@@ -55,7 +56,8 @@ class Signup(Resource):
 
         try:
             new_user=User(
-            fullname=data.get('fullname'),
+            firstname=data.get('firstname'),
+            lastname=data.get('lastname'),
             email=data.get('email'),
             password=generate_password_hash(data.get('password')),
             role=role

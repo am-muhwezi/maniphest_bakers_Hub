@@ -12,6 +12,7 @@ from .models.orders import Orders
 from .models.pastries import Pastries
 from .models.users import User
 from flask_migrate import Migrate
+from flask_cors import CORS
 from werkzeug.exceptions import NotFound, MethodNotAllowed
 
 
@@ -35,6 +36,8 @@ def create_app(config=config_dict['dev']):
 
     db.init_app(app)
     jwt=JWTManager(app)
+
+    CORS(app)
 
 
     @api.errorhandler(NotFound)
